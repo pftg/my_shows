@@ -1,0 +1,15 @@
+#!/usr/bin/env ruby
+
+require 'my_shows'
+
+# Output message to $stderr, prefixed with the program name
+def pute(message="")
+  $stderr.puts "#{$0}: #{message}"
+end
+
+begin
+  MyShows::CLI.start(ARGV)
+rescue Interrupt
+  pute "Quitting..."
+  exit 1
+end

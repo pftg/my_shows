@@ -1,10 +1,11 @@
 require 'faraday_middleware'
 
-class SidereelClient
+class SidereelClient < Struct.new(:username, :password)
   def connection
+    MyShows.logger.info "Create connection for #{username}"
     @connection ||= Faraday.new url: 'http://www.sidereel.com' do |conn|
       conn.request :url_encoded # form-encode POST params
-      conn.request :basic_auth, 'pftg@mail.ru', 'qweasd'
+      conn.request :basic_auth, username, password
       conn.request :json
 
       conn.response :mashify
@@ -18,6 +19,6 @@ class SidereelClient
 
   def tracked_tv_shows
     response = connection.get '/users/tracked_tv_shows'
-    response.body
+    @shows ||= response.body
   end
 end

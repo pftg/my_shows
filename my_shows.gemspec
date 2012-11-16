@@ -16,4 +16,12 @@ Gem::Specification.new do |gem|
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }
   gem.test_files    = gem.files.grep(%r{^(test|spec|features)/})
   gem.require_paths = ["lib"]
+
+  gem.executables = %w(my_shows)
+  gem.default_executable = 'my_shows'
+  gem.add_dependency('hashie', '~> 1.2.0')
+  gem.add_dependency('faraday_middleware', '~> 0.9.0')
+  gem.add_dependency('fuzzy-string-match', '~> 0.9.4')
+  gem.add_dependency('netrc', '~> 0.7.7')
+  gem.add_dependency('nokogiri')
 end

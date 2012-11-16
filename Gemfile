@@ -1,11 +1,11 @@
 source 'https://rubygems.org'
 
-gem 'faraday_middleware'
-gem 'hashie'
-gem 'awesome_print'
-gem 'torrentz'
-gem 'launchy'
-gem 'fuzzy-string-match'
+gemspec
+
+group :development do
+  gem 'awesome_print'
+  gem 'rake'
+end
 
 group :test do
   gem 'rspec-core'

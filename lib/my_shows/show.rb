@@ -1,20 +1,20 @@
 module MyShows
   class Show
-    def self.client
-      @client ||= SidereelClient.new
+    def self.client client = nil
+      @client ||= SidereelClient.new ENV["SIDEREEL_USERNAME"], ENV["SIDEREEL_PASSWORD"]
+    end
+
+    def self.client= client
+      @client = client
     end
 
     def self.next_episodes
-      tv_shows = client.tracked_tv_shows.first[1].
-        map(&:tv_show).reject { |show|
+      client.tracked_tv_shows.first[1].map(&:tv_show).reject do |show|
         show.next_episode.nil? || show.next_episode.is_upcoming #|| (Date.parse(show.next_episode.air_date_utc) >= Time.now.to_date)
-        #TODO: Maybe better just get `is_upcoming == false` attribute
-      }.map do |show|
-        Hashie::Mash.new.tap { |result|
-          result.name    = show.complete_name
-          result.season  = show.next_episode.season_number
-          result.episode = show.next_episode.season_ordinal
-        }
+      end.map do |show|
+        Hashie::Mash.new name: show.complete_name,
+          season:  show.next_episode.season_number,
+          episode: show.next_episode.season_ordinal
       end
     end
   end
