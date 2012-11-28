@@ -8,9 +8,9 @@ Gem::Specification.new do |gem|
   gem.version       = MyShows::VERSION
   gem.authors       = ["Paul Nikitochkin"]
   gem.email         = ["pftg@jetthoughts.com"]
-  gem.description   = %q{TODO: Write a gem description}
-  gem.summary       = %q{TODO: Write a gem summary}
-  gem.homepage      = ""
+  gem.description   = %q{My Shows get list of next episodes from Sidereel.com, find torrent links and enque them to download}
+  gem.summary       = %q{New TV Show Episodes downloader}
+  gem.homepage      = "http://github.com/pftg/my_shows"
 
   gem.files         = `git ls-files`.split($/)
   gem.executables   = gem.files.grep(%r{^bin/}).map{ |f| File.basename(f) }

@@ -67,7 +67,7 @@ module MyShows
       print "Password (typing will be hidden): "
       password = ask_for_password
 
-      [user,password]
+      [user, password]
     end
 
     def ask_for_password
@@ -84,8 +84,7 @@ module MyShows
 
     def check
       client = SidereelClient.new *self.credentials
-      p client.tracked_tv_shows
+      client.tracked_tv_shows
     end
-
   end
 end
