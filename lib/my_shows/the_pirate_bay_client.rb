@@ -7,7 +7,7 @@ class ThePirateBayClient
     @connection ||= Faraday.new url: 'http://thepiratebay.se' do |conn|
       conn.headers[:user_agent] = 'libcurl-agent/1.0'
       conn.request :url_encoded
-      conn.response :logger
+      conn.response :logger, MyShows.logger
       conn.adapter Faraday.default_adapter
     end
   end

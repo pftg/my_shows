@@ -3,6 +3,7 @@ require 'faraday_middleware'
 class SidereelClient < Struct.new(:username, :password)
   def connection
     MyShows.logger.info "Create connection for #{username}"
+
     @connection ||= Faraday.new url: 'http://www.sidereel.com' do |conn|
       conn.request :url_encoded # form-encode POST params
       conn.request :basic_auth, username, password
@@ -11,7 +12,7 @@ class SidereelClient < Struct.new(:username, :password)
       conn.response :mashify
       conn.response :json
 
-      conn.response :logger
+      conn.response :logger, MyShows.logger
 
       conn.adapter Faraday.default_adapter
     end

@@ -8,6 +8,8 @@ def pute(message="")
 end
 
 begin
+  MyShows.logger.level = ::Logger::FATAL
+
   MyShows::CLI.start(ARGV)
 rescue Interrupt
   pute "Quitting..."
