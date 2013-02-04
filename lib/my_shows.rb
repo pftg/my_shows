@@ -1,15 +1,19 @@
+#!ruby19
+# encoding: utf-8
+
 require 'my_shows/version'
 
 require "bundler/setup"
 
 require 'netrc'
 require 'fuzzystringmatch'
+require 'colorize'
 
 require 'my_shows/logger'
 require 'my_shows/auth'
 require 'my_shows/sidereel_client'
 require 'my_shows/show'
-require 'my_shows/the_pirate_bay_client'
+require 'my_shows/episode'
 
 module MyShows
   class CLI
@@ -24,41 +28,43 @@ module MyShows
         MyShows::Show.client = SidereelClient.new(*self.credentials)
       end
 
-      def links_for next_episodes
-        tracker = ThePirateBayClient.new
-        jarow = FuzzyStringMatch::JaroWinkler.create(:native)
-
-        next_episodes.map do |episode|
-          episode_search_query = "%s s%02de%02d PublicHD" % [episode.name, episode.season, episode.episode]
-          logger.info "Looking for '#{episode_search_query}' ..."
-
-          begin
-            torrents = tracker.search(episode_search_query)
-            torrent = torrents.sort_by do |torrent|
-              jarow.getDistance(episode_search_query, torrent.name)
-            end.reverse.first
-
-            [torrent.magnet_link, episode] if torrent
-          rescue => e
-            logger.warn "Problem with looking torrent link"
-            logger.debug e.message
-            nil
-          end
-        end.compact
+      def lookup_magnet_links shows
+        shows.map { |show|
+          show.episode.torrent_link!
+        }.compact
       end
 
       def enque_to_download links
         links.each do |link|
-          logger.debug "Enque #{link.last.name} #{link.first}"
-          `open '#{link.first}'`
-          logger.debug 'Sleep in 10 sec'
-          sleep 10
+          logger.debug "Enque #{link}"
+          `open '#{link}'`
         end
       end
 
       def start *args
+        print_header
         configure_client
-        enque_to_download links_for(Show.next_episodes)
+        shows = Show.next_episodes
+        links = lookup_magnet_links(shows)
+        print_episodes shows
+        enque_to_download links
+        print_footer
+      end
+
+      def print_header
+        puts "MyShows #{MyShows::VERSION}".colorize(:light_white)
+      end
+
+      def print_episodes episodes
+        puts "Next episodes:"
+        episodes.each do |show|
+          episode = show.episode
+          puts "#{episode} [#{episode.magnet_link ? '✓'.colorize(:green) : '✗'.colorize(:red)}]"
+        end
+      end
+
+      def print_footer
+        puts 'Bye!'
       end
     end
   end

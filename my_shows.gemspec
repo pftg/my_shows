@@ -24,4 +24,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency('fuzzy-string-match', '~> 0.9.4')
   gem.add_dependency('netrc', '~> 0.7.7')
   gem.add_dependency('nokogiri')
+  gem.add_dependency('colorize')
 end
