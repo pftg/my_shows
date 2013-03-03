@@ -10,6 +10,7 @@ require 'fuzzystringmatch'
 require 'colorize'
 
 require 'my_shows/logger'
+require 'my_shows/launcher'
 require 'my_shows/auth'
 require 'my_shows/sidereel_client'
 require 'my_shows/show'
@@ -37,7 +38,7 @@ module MyShows
       def enque_to_download links
         links.each do |link|
           logger.debug "Enque #{link}"
-          `open '#{link}'`
+          Launchy::Application::General.new.open(["#{URI(link).to_s}"])
         end
       end
 
