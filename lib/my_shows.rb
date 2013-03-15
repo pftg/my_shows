@@ -38,6 +38,7 @@ module MyShows
       def enque_to_download links
         links.each do |link|
           logger.debug "Enque #{link}"
+          sleep 5
           Launchy::Application::General.new.open(["#{URI(link).to_s}"])
         end
       end
