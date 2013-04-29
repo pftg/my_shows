@@ -3,7 +3,7 @@
 
 require 'my_shows/version'
 
-require "bundler/setup"
+require 'bundler/setup'
 
 require 'netrc'
 require 'fuzzystringmatch'
@@ -29,21 +29,21 @@ module MyShows
         MyShows::Show.client = SidereelClient.new(*self.credentials)
       end
 
-      def lookup_magnet_links shows
+      def lookup_magnet_links(shows)
         shows.map { |show|
           show.episode.torrent_link!
         }.compact
       end
 
-      def enque_to_download links
+      def enque_to_download(links)
         links.each do |link|
-          logger.debug "Enque #{link}"
+          logger.info "Enque #{URI(link).to_s}"
           sleep 5
-          Launchy::Application::General.new.open(["#{URI(link).to_s}"])
+          Launchy::Application::General.new.open([URI(link).to_s])
         end
       end
 
-      def start *args
+      def start(*args)
         print_header
         configure_client
         shows = Show.next_episodes
@@ -58,7 +58,7 @@ module MyShows
       end
 
       def print_episodes episodes
-        puts "Next episodes:"
+        puts 'Next episodes:'
         episodes.each do |show|
           episode = show.episode
           puts "#{episode} [#{episode.magnet_link ? '✓'.colorize(:green) : '✗'.colorize(:red)}]"
