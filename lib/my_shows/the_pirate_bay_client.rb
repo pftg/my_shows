@@ -4,9 +4,10 @@ require 'hashie'
 
 class ThePirateBayClient
   def connection
-    @connection ||= Faraday.new url: 'http://thepiratebay.is' do |conn|
+    @connection ||= Faraday.new url: 'http://thepiratebay.org' do |conn|
       conn.headers[:user_agent] = 'libcurl-agent/1.0'
       conn.request :url_encoded
+      conn.response :follow_redirects
       conn.response :logger, MyShows.logger
       conn.adapter Faraday.default_adapter
     end
