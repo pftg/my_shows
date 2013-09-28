@@ -8,6 +8,7 @@ require 'bundler/setup'
 require 'netrc'
 require 'fuzzystringmatch'
 require 'colorize'
+require 'pmap'
 
 require 'my_shows/logger'
 require 'my_shows/launcher'
@@ -30,22 +31,34 @@ module MyShows
       end
 
       def lookup_magnet_links(shows)
-        shows.map { |show|
-          show.episode.torrent_link!
-        }.compact
+        shows.pmap do |show|
+          link = show.episode.torrent_link!
+
+          if link
+            logger.debug "Found #{link[0...10]} for #{show.name}!"
+          else
+            logger.debug "Not Found any links for #{show.name}!"
+          end
+
+          link
+        end.compact
       end
 
       def enque_to_download(links)
         links.each do |link|
-          logger.info "Enque #{URI(link).to_s}"
           sleep 5
-          Launchy::Application::General.new.open([URI(link).to_s])
+          uri = URI(link).to_s
+          logger.info "Enque #{uri}"
+          Launchy::Application::General.new.open([uri])
         end
       end
 
       def start(*args)
         print_header
         configure_client
+
+        #TODO: Episode.next_unwatched.with_links.peach { |episode| print_episode episode; enquee_to_download episode; }
+
         shows = Show.next_episodes
         links = lookup_magnet_links(shows)
         print_episodes shows
@@ -73,6 +86,6 @@ module MyShows
 end
 
 if __FILE__ == $0
-  MyShows.logger.level = ::Logger::FATAL
+  MyShows.logger.level = ::Logger::WARN
   MyShows::CLI.start
 end

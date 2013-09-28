@@ -26,4 +26,5 @@ Gem::Specification.new do |gem|
   gem.add_dependency('nokogiri')
   gem.add_dependency('colorize')
   gem.add_dependency('launchy')
+  gem.add_dependency('pmap')
 end

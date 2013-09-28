@@ -2,6 +2,9 @@ require 'my_shows/the_pirate_bay_client'
 
 module MyShows
   class Episode
+    MAPPING_SHOW_NAMES = Hash.new { |hash, key| hash[key] = key }
+    MAPPING_SHOW_NAMES['Avatar: Legend of Korra'] = 'The Legend Of Korra'
+
     @@jarow   = FuzzyStringMatch::JaroWinkler.create(:native)
     @@tracker = ThePirateBayClient.new
 
@@ -23,6 +26,8 @@ module MyShows
           return self.magnet_link if torrent_link_with_ext_keyword(keyword)
         end
       end
+
+      nil
     end
 
     def torrent_link_with_ext_keyword(keyword)
@@ -44,7 +49,7 @@ module MyShows
     end
 
     def to_s
-      '%s s%02de%02d' % [show.name, season, episode]
+      '%s s%02de%02d' % [MAPPING_SHOW_NAMES[show.name], season, episode]
     end
   end
 end
