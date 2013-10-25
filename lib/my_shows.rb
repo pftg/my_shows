@@ -1,9 +1,6 @@
-#!ruby19
 # encoding: utf-8
 
 require 'my_shows/version'
-
-require 'bundler/setup'
 
 require 'netrc'
 require 'fuzzystringmatch'
