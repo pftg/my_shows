@@ -47,3 +47,7 @@ Typing `my_shows` at console and it automatically starts:
 Copyright (c) 2012-2013 Paul Nikitochkin. See [LICENSE][] for details.
 
 [license]: LICENSE.md
+
+
+[![Bitdeli Badge](https://d2weczhvl823v0.cloudfront.net/pftg/my_shows/trend.png)](https://bitdeli.com/free "Bitdeli Badge")
+
